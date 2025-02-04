@@ -10,6 +10,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class SelfPlay:
     def __init__(self, network, simulations_per_move=100, buffer_size=10000):
         self.network = network
+        self.device = next(network.parameters()).device  # Get device from network
         self.simulations = simulations_per_move
         self.buffer = deque(maxlen=buffer_size)
         self.temp_threshold = 5  # Moves before temperature becomes 0
@@ -57,7 +58,7 @@ class SelfPlay:
                 if not node.board.is_game_over():
                     # 1. Prepare batch for all leaf nodes (just this node in our case)
                     leaf_nodes = [node]
-                    batch_states = [board_to_tensor(n.board) for n in leaf_nodes]
+                    batch_states = [board_to_tensor(n.board).to(self.device) for n in leaf_nodes]  # Move to device
                     batch = torch.cat(batch_states)
 
                     # 2. Evaluate batch
@@ -166,7 +167,7 @@ class SelfPlay:
             winner = node.board.get_winner()
             return 1.0 if winner == node.board.current_player else -1.0
         else:
-            state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---
+            state_tensor = board_to_tensor(node.board).to(self.device)  # Use self.device here
             with torch.no_grad():
                 _, value = self.network(state_tensor)
             return value.item()
