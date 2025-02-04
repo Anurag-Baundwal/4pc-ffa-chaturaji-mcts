@@ -7,7 +7,7 @@ from utils import board_to_tensor, move_to_index
 import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-  
+
 class ChessDataset(Dataset):
     def __init__(self, buffer):
         self.buffer = buffer
@@ -32,6 +32,12 @@ class ChessDataset(Dataset):
 def train():
     # Initialize
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+  
+    # Create model directory
+    model_dir = '/content/drive/MyDrive/models'
+    os.makedirs(model_dir, exist_ok=True)
+
     network = ChaturajiNN().to(device)
     optimizer = optim.Adam(network.parameters(), lr=0.001, weight_decay=1e-4)
     self_play = SelfPlay(network, simulations_per_move=100)
@@ -86,7 +92,13 @@ def train():
             print(f"Epoch {epoch+1} Loss: {total_loss/len(loader):.4f}")
         
         # Save model
-        torch.save(network.state_dict(), f"model.pth")
+        # torch.save(network.state_dict(), f"model.pth")
+        # print(f"Model saved after iteration {iteration+1}")
+        
+        # Save every 10 iterations
+        if (iteration+1) % 10 == 0:
+            save_path = f'{model_dir}/chaturaji_iter_{iteration+1}.pth'
+            torch.save(network.state_dict(), save_path)
         print(f"Model saved after iteration {iteration+1}")
 
 if __name__ == "__main__":
