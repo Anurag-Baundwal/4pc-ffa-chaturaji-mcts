@@ -20,7 +20,8 @@ def get_best_move_mcts(board: Board, network, simulations=250): # Reduced from 8
             value = torch.tensor(1.0) if node.board.get_winner() == root.board.current_player else torch.tensor(-1.0) # Convert to tensor # bug fixed
         else:
             with torch.no_grad():
-                state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---
+                # state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---
+                state_tensor = board_to_tensor(node.board, device=device)
                 policy_logits, value = network(state_tensor)
                 policy_probs = process_policy(policy_logits, node.board)
             
