@@ -58,7 +58,7 @@ class SelfPlay:
                 if not node.board.is_game_over():
                     # 1. Prepare batch for all leaf nodes (just this node in our case)
                     leaf_nodes = [node]
-                    batch_states = [board_to_tensor(n.board).to(self.device) for n in leaf_nodes]  # Move to device
+                    batch_states = [board_to_tensor(n.board, device=self.device) for n in leaf_nodes]  # Create tensor on device directly                    
                     batch = torch.cat(batch_states)
 
                     # 2. Evaluate batch
