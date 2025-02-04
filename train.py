@@ -6,6 +6,8 @@ from model import ChaturajiNN
 from utils import board_to_tensor, move_to_index
 import os
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  
 class ChessDataset(Dataset):
     def __init__(self, buffer):
         self.buffer = buffer

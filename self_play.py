@@ -5,6 +5,8 @@ from collections import deque
 from mcts import MCTSNode
 from utils import board_to_tensor, move_to_index
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class SelfPlay:
     def __init__(self, network, simulations_per_move=100, buffer_size=10000):
         self.network = network
@@ -164,7 +166,7 @@ class SelfPlay:
             winner = node.board.get_winner()
             return 1.0 if winner == node.board.current_player else -1.0
         else:
-            state_tensor = board_to_tensor(node.board)
+            state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---
             with torch.no_grad():
                 _, value = self.network(state_tensor)
             return value.item()

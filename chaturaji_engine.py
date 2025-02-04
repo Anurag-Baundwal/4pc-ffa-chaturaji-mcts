@@ -12,6 +12,8 @@ from utils import *
 from board import Board
 from pieces import *
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 if __name__ == '__main__':
     board = Board()
     total_execution_time = 0
