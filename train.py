@@ -1,11 +1,14 @@
 # train.py
+import multiprocessing  # Import multiprocessing at the VERY top
+multiprocessing.set_start_method('spawn', force=True) # Set start method to 'spawn' as the ABSOLUTE FIRST line, and use force=True
+
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 from self_play import SelfPlay, _generate_game_static #, _process_game_result_static # No longer need to import static methods from SelfPlay
 from model import ChaturajiNN
 from utils import board_to_tensor, move_to_index
-import os, multiprocessing
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -129,6 +132,4 @@ def train():
         print(f"Model saved after iteration {iteration+1}")
 
 if __name__ == "__main__":
-    import multiprocessing
-    multiprocessing.set_start_method('spawn')
     train()
