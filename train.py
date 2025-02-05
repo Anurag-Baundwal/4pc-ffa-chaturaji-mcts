@@ -30,12 +30,12 @@ class ChessDataset(Dataset):
             policy_tensor[idx] = prob
         return policy_tensor
 
-def generate_games_parallel(model_class, simulations_per_move, temp_threshold, num_processes, games_per_process=4): # Pass simulations_per_move, temp_threshold, num_processes as arguments
+def generate_games_parallel(simulations_per_move, temp_threshold, num_processes, games_per_process=4):
     processes = num_processes
     total_games = processes * games_per_process
     print(f"Generating {total_games} games across {processes} processes...")
     with multiprocessing.Pool(processes=processes) as pool:
-        game_args = [(model_class, simulations_per_move, temp_threshold) for _ in range(total_games)] # Use passed arguments directly
+        game_args = [(simulations_per_move, temp_threshold) for _ in range(total_games)]
         games_data_list = pool.starmap(_generate_game_static, game_args)
     return [item for sublist in games_data_list for item in sublist]
 
