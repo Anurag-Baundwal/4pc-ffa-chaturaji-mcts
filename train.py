@@ -17,7 +17,7 @@ class ChessDataset(Dataset):
 
     def __getitem__(self, idx):
         board, policy, value = self.buffer[idx]
-        state_tensor = board_to_tensor(board)
+        state_tensor = board_to_tensor(board, device)
         policy_tensor = self._policy_to_tensor(policy, board)
         return state_tensor, policy_tensor, torch.tensor(value, dtype=torch.float32)
 
