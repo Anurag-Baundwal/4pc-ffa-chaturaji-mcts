@@ -1,7 +1,8 @@
+# train.py
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
-from self_play import SelfPlay
+from self_play import SelfPlay, _generate_game_static
 from model import ChaturajiNN
 from utils import board_to_tensor, move_to_index
 import os, multiprocessing
@@ -55,7 +56,7 @@ def train():
         print(f"Generating {total_games} games across {processes} processes...")
         with multiprocessing.Pool(processes=processes) as pool:
             game_args = [(network, self_play.simulations, self_play.temp_threshold) for _ in range(total_games)] # Arguments for each game generation
-            games_data_list = pool.starmap(SelfPlay._generate_game_static, game_args) # Generate games in parallel
+            games_data_list = pool.starmap(_generate_game_static, game_args) # Generate games in parallel
         return [item for sublist in games_data_list for item in sublist] # Flatten list of lists
 
     # Training loop
@@ -118,7 +119,7 @@ def train():
         # Save every 10 iterations
         if (iteration+1) % 10 == 0:
             save_path = f'{model_dir}/chaturaji_iter_{iteration+1}.pth'
-            torch.save(network.state_dict(), save_path)
+            torch.save(network.module.state_dict() if isinstance(network, torch.nn.DataParallel) else network.state_dict(), save_path) # handles dataparallel models
         print(f"Model saved after iteration {iteration+1}")
 
 if __name__ == "__main__":

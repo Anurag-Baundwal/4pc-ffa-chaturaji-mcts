@@ -1,3 +1,4 @@
+# self_play.py
 from board import Board
 import torch
 import numpy as np
@@ -18,11 +19,10 @@ class SelfPlay:
     def generate_game(self, temperature=1.0): # Renamed instance method
         return SelfPlay._generate_game_static(self.network, self.simulations, self.temp_threshold, temperature)
 
-    @staticmethod # Make it a static method
-    def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method (correct name)
+    def _generate_game_static(self, network, simulations_per_move, temp_threshold, temperature=1.0): # Static method (correct name)
         board = Board()
         game_data = []
-        move_count = 0
+        move_count = 1
 
         while not board.is_game_over():
             # show training progress
@@ -76,7 +76,7 @@ class SelfPlay:
             game_data.append((board.copy(), policy, root.board.current_player))
 
             # Make move
-            move = SelfPlay._choose_move_static(root, temperature) # Call static _choose_move_static
+            move = SelfPlay._choose_move_static(root, temperature=(1.0 if move_count < temp_threshold else 0.0)) # Call static _choose_move_static
             board.make_move(move)
             move_count += 1
 
@@ -85,11 +85,10 @@ class SelfPlay:
         print(f"Game finished. {len(game_data)} positions generated in total.")
         return game_data
 
-    @staticmethod # Make static - removed self
-    def _process_game_result_static(game_data, final_board): # Static version - removed self
+    def _process_game_result_static(self, game_data, final_board): # Static version - removed self
         winner = final_board.get_winner()
         for i, (board, policy, player) in enumerate(game_data):
-            # Value target: +1 if player wins, -1 if loses, 0 for draws
+            # Value target: +1 if player wins, -1 if loses, 0 for draw
             value = 1.0 if player == winner else -1.0 if winner is not None else 0.0
             game_data[i] = (board, policy, value)
         return game_data
@@ -148,3 +147,12 @@ class SelfPlay:
             with torch.no_grad():
                 _, value = self.network(state_tensor)
             return value.item()
+
+@staticmethod # Make it a static method
+def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method (correct name)
+    sp = SelfPlay(network, simulations_per_move, 10000, temp_threshold)
+    return sp._generate_game_static(network, simulations_per_move, temp_threshold, temperature)
+
+@staticmethod # Make static - removed self
+def _process_game_result_static(game_data, final_board): # Static version - removed self
+    return SelfPlay._process_game_result_static(game_data, final_board)
