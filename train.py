@@ -129,4 +129,6 @@ def train():
         print(f"Model saved after iteration {iteration+1}")
 
 if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.set_start_method('spawn')
     train()
