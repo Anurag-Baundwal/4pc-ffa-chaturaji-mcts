@@ -9,6 +9,7 @@ import torch.nn.functional as F
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def get_best_move_mcts(board: Board, network, simulations=250): # Reduced from 800 to 250 for faster nn training
+    device = next(network.parameters()).device  # Get device from network
     root = MCTSNode(board)
     for _ in range(simulations):
         node = root
@@ -17,7 +18,7 @@ def get_best_move_mcts(board: Board, network, simulations=250): # Reduced from 8
         
         if node.board.is_game_over():
             # value = 1.0 if node.board.get_winner() == root.board.current_player else -1.0 # bug
-            value = torch.tensor(1.0) if node.board.get_winner() == root.board.current_player else torch.tensor(-1.0) # Convert to tensor # bug fixed
+            value = torch.tensor(1.0, device=device) if node.board.get_winner() == root.board.current_player else torch.tensor(-1.0, device=device)
         else:
             with torch.no_grad():
                 # state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---

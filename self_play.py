@@ -168,7 +168,8 @@ class SelfPlay:
             winner = node.board.get_winner()
             return 1.0 if winner == node.board.current_player else -1.0
         else:
-            state_tensor = board_to_tensor(node.board).to(self.device)  # Use self.device here
+            # Create tensor directly on network's device
+            state_tensor = board_to_tensor(node.board, device=self.device)
             with torch.no_grad():
                 _, value = self.network(state_tensor)
             return value.item()

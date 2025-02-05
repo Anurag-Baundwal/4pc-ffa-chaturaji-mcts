@@ -126,7 +126,7 @@ def get_uci_string(move, board):
 
     return f"{from_col}{from_row}{to_col}{to_row}"
 
-def board_to_tensor(board: Board, device='cpu') -> torch.Tensor:
+def board_to_tensor(board: Board, device) -> torch.Tensor:
     tensor = torch.zeros(40, 8, 8, device=device)  # Specify device during creation
     piece_types = list(PieceType)
     
