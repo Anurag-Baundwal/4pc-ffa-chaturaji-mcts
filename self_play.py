@@ -8,14 +8,19 @@ from utils import board_to_tensor, move_to_index
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class SelfPlay:
-    def __init__(self, network, simulations_per_move=100, buffer_size=10000):
+    def __init__(self, network, simulations_per_move=100, buffer_size=10000, temp_threshold=5): # Added temp_threshold to init
         self.network = network
         self.device = next(network.parameters()).device  # Get device from network
         self.simulations = simulations_per_move
         self.buffer = deque(maxlen=buffer_size)
-        self.temp_threshold = 5  # Moves before temperature becomes 0
+        self.temp_threshold = temp_threshold  # Moves before temperature becomes 0
 
-    def generate_game(self, temperature=1.0):
+
+    def generate_game(self, temperature=1.0): # Instance method to call the static method
+        return SelfPlay._generate_game_static(self.network, self.simulations, self.temp_threshold, temperature)
+
+    @staticmethod # Make it a static method
+    def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method - removed self
         board = Board()
         game_data = []
         move_count = 0
@@ -24,64 +29,41 @@ class SelfPlay:
             # show training progress
             if move_count % 5 == 0:
                 print(f"Move {move_count} - {len(game_data)} positions generated")
-            
-            
+
+
             root = MCTSNode(board)
-            
-            # print(f"  Running MCTS for move {move_count + 1}...")  
 
             # Run MCTS simulations
-            for sim_num in range(self.simulations):
-                # if (sim_num + 1) % 25 == 0:  # Print every 25 simulations
-                #     print(f"    Simulation {sim_num + 1}/{self.simulations}")
+            for sim_num in range(simulations_per_move):
 
                 node = root
                 search_path = [node]
 
                 # Selection
-                while not node.is_leaf(): # add and not node.board.is_game_over():?
+                while not node.is_leaf():
                     node = node.select_child()
                     search_path.append(node)
 
-                # # Expansion
-                # if not node.board.is_game_over():
-                #     state_tensor = board_to_tensor(node.board)
-                #     with torch.no_grad():
-                #         policy_logits, value = self.network(state_tensor)
-                    
-                #     # Convert policy to move distribution
-                #     legal_moves = node.board.get_psuedo_legal_moves(node.board.current_player)
-                #     move_probs = self._process_policy(policy_logits.squeeze(), legal_moves)
-                #     node.expand(move_probs)
 
                 # -- BATCHED EXPANSION AND EVALUATION --
                 if not node.board.is_game_over():
                     # 1. Prepare batch for all leaf nodes (just this node in our case)
                     leaf_nodes = [node]
-                    device = next(self.network.parameters()).device  # Get the network's device directly
-                    batch_states = [board_to_tensor(n.board, device=device) for n in leaf_nodes]                    
+                    device_static = next(network.parameters()).device  # Get the network's device directly
+                    batch_states = [board_to_tensor(n.board, device=device) for n in leaf_nodes]
                     batch = torch.cat(batch_states)
 
                     # 2. Evaluate batch
                     with torch.no_grad():
-                        policy_logits, values = self.network(batch)
+                        policy_logits, values = network(batch)
 
                     # 3. Expand leaf nodes
                     for i, leaf_node in enumerate(leaf_nodes):
                         legal_moves = leaf_node.board.get_psuedo_legal_moves(leaf_node.board.current_player)
                         policy_logit = policy_logits[i].squeeze()
-                        move_probs = self._process_policy(policy_logit, legal_moves)
+                        move_probs = SelfPlay._process_policy_static(policy_logit, legal_moves) # Call static _process_policy_static
                         leaf_node.expand(move_probs)
 
-                # # Backpropagation (using values from the batch)
-                # # value = self._evaluate_node(node) # Removed as it is no longer used when we are using a value from the batch
-                # for i, n in enumerate(search_path):
-                #     # Check if n is in leaf_nodes and use the corresponding value
-                #     if n in leaf_nodes:
-                #         value_index = leaf_nodes.index(n)
-                #         n.update(values[value_index].item())
-                #     else:
-                #         n.update(values[i].item())
 
                 # CORRECTED BACKPROPAGATION
                 # Get the leaf value (only 1 in our case)
@@ -94,76 +76,73 @@ class SelfPlay:
             # -- END OF BATCHED EXPANSION AND EVALUATION --
 
             # Store training data
-            # policy = self._get_action_probs(root, temperature=(1.0 if move_count < self.temp_threshold else 0.001))
-            policy = self._get_action_probs(root, temperature=(1.0 if move_count < self.temp_threshold else 0.0))
+            policy = SelfPlay._get_action_probs_static(root, temperature=(1.0 if move_count < temp_threshold else 0.0)) # Call static _get_action_probs_static
             game_data.append((board.copy(), policy, root.board.current_player))
 
             # Make move
-            move = self._choose_move(root, temperature)
+            move = SelfPlay._choose_move_static(root, temperature) # Call static _choose_move_static
             board.make_move(move)
             move_count += 1
 
         # Assign final values
-        self._process_game_result(game_data, board)
-        print(f"Game finished. {len(game_data)} positions generated in total.")  # Added  
+        game_data = SelfPlay._process_game_result_static(game_data, board) # Call static version and assign back to game_data
+        print(f"Game finished. {len(game_data)} positions generated in total.")
         return game_data
 
-    def _process_policy(self, policy_logits, legal_moves):
+    @staticmethod # Make static - removed self
+    def _process_game_result_static(game_data, final_board): # Static version - removed self
+        winner = final_board.get_winner()
+        for i, (board, policy, player) in enumerate(game_data):
+            # Value target: +1 if player wins, -1 if loses, 0 for draws
+            value = 1.0 if player == winner else -1.0 if winner is not None else 0.0
+            game_data[i] = (board, policy, value)
+        return game_data
+
+    @staticmethod # Make static
+    def _process_policy_static(policy_logits, legal_moves): # Static version
         move_indices = [move_to_index(move) for move in legal_moves]
         legal_mask = torch.zeros_like(policy_logits)
         legal_mask[move_indices] = 1.0
         probs = torch.softmax(policy_logits * legal_mask - 1e10*(1 - legal_mask), dim=0)
         return {move: probs[move_to_index(move)].item() for move in legal_moves}
 
-    # def _get_action_probs(self, root, temperature=1.0):
-    #     visit_counts = np.array([child.visit_count for child in root.children])
-    #     if temperature == 0:
-    #         probs = np.zeros_like(visit_counts)
-    #         probs[np.argmax(visit_counts)] = 1.0
-    #     else:
-    #         visit_counts = visit_counts ** (1 / temperature)
-    #         probs = visit_counts / np.sum(visit_counts)
-    #     return {child.move: prob for child, prob in zip(root.children, probs)}
-    # # BUG:
-    # (.venv) C:\Users\dell3\source\repos3\4pc-ffa-chaturaji-mcts>python train.py
-    # Iteration 1: Generating games...
-    # C:\Users\dell3\source\repos3\4pc-ffa-chaturaji-mcts\self_play.py:75: RuntimeWarning: overflow encountered in power
-    #   visit_counts = visit_counts ** (1 / temperature)
-    # C:\Users\dell3\source\repos3\4pc-ffa-chaturaji-mcts\self_play.py:76: RuntimeWarning: invalid value encountered in divide
-    #   probs = visit_counts / np.sum(visit_counts)
-
-    # bugfix:
-    def _get_action_probs(self, root, temperature=1.0):
+    @staticmethod # Make static
+    def _get_action_probs_static(root, temperature=1.0): # Static version
         visit_counts = np.array([child.visit_count for child in root.children])
         if temperature == 0:
             probs = np.zeros_like(visit_counts)
             probs[np.argmax(visit_counts)] = 1.0
         else:
             # Use log-sum-exp trick for numerical stability
-            visit_counts = visit_counts + 1e-6  # Add a small epsilon to visit_counts
+            visit_counts = visit_counts + 1e-6
             log_counts = np.log(visit_counts) / temperature
-            # Find max for stability (subtract it from all elements)
+            # Find max for stability
             max_log_counts = np.max(log_counts)
             log_counts -= max_log_counts
             # Exponentiate and normalize
             probs = np.exp(log_counts)
             probs /= np.sum(probs)
         return {child.move: prob for child, prob in zip(root.children, probs)}
-    
-    def _choose_move(self, root, temperature):
-        move_probs = self._get_action_probs(root, temperature)
+
+    @staticmethod # Make static
+    def _choose_move_static(root, temperature): # Static version
+        move_probs = SelfPlay._get_action_probs_static(root, temperature) # Use static version
         moves = list(move_probs.keys())
         probs = list(move_probs.values())
         return np.random.choice(moves, p=probs)
 
-    def _process_game_result(self, game_data, final_board):
-        winner = final_board.get_winner()  # You'll need to implement get_winner() in Board
-        for i, (board, policy, player) in enumerate(game_data):
-            # Value target: +1 if player wins, -1 if loses, 0 for draws
-            value = 1.0 if player == winner else -1.0 if winner is not None else 0.0
-            self.buffer.append((board, policy, value))
 
-    def _evaluate_node(self, node):
+    def _process_policy(self, policy_logits, legal_moves): # Instance version - will not be used directly in multiprocessing, but kept for potential future single-process usage or reference
+        return SelfPlay._process_policy_static(policy_logits, legal_moves) # Call static version
+
+    def _get_action_probs(self, root, temperature=1.0): # Instance version
+        return SelfPlay._get_action_probs_static(root, temperature) # Call static version
+
+    def _choose_move(self, root, temperature): # Instance version
+        return SelfPlay._choose_move_static(root, temperature) # Call static version
+
+
+    def _evaluate_node(self, node): # Instance method - kept as is, not used directly in static game generation
         if node.board.is_game_over():
             winner = node.board.get_winner()
             return 1.0 if winner == node.board.current_player else -1.0
