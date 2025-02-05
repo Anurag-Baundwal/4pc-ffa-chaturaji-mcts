@@ -69,7 +69,7 @@ def train():
 
         # Generate games
         print(f"Generating games in parallel...")
-        games = generate_games_parallel(ChaturajiNN, simulations_per_move_val, temp_threshold_val, num_processes, games_per_process=4) # Pass simulations_per_move_val and temp_threshold_val directly
+        games = generate_games_parallel(simulations_per_move_val, temp_threshold_val, num_processes, games_per_process=4) # Pass simulations_per_move_val and temp_threshold_val directly
 
 
         # # Original serial game generation (comment out)

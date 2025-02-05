@@ -10,9 +10,9 @@ from model import ChaturajiNN # Import the model class
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Define _generate_game_static as a module-level function, not a staticmethod
-def _generate_game_static(model_class, simulations_per_move, temp_threshold, temperature=1.0): # Accept model class
+def _generate_game_static(simulations_per_move, temp_threshold, temperature=1.0): # Accept model class
     from model import ChaturajiNN
-    network = model_class().to(device) # Instantiate network here, inside the process
+    network = ChaturajiNN().to(device)
     board = Board()
     game_data = []
     move_count = 1
