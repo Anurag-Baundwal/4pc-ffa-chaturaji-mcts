@@ -12,7 +12,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Define _generate_game_static as a module-level function, not a staticmethod
 def _generate_game_static(simulations_per_move, temp_threshold, temperature=1.0): # Accept model class
     from model import ChaturajiNN
-    network = ChaturajiNN().to(device)
+    # Force CPU usage for self-play generation
+    network = ChaturajiNN().to(torch.device("cpu"))
     board = Board()
     game_data = []
     move_count = 1
