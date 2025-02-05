@@ -56,7 +56,7 @@ def train():
         
         # Create dataset
         dataset = ChessDataset([item for game in games for item in game])
-        loader = DataLoader(dataset, batch_size=256, shuffle=True) # batch size increased from 32 to 256 for colab gpus
+        loader = DataLoader(dataset, batch_size=4096, shuffle=True) # batch size increased from 32 to 256 for colab gpus
 
         print(f"Generated {len(dataset)} data points from games.")
         
