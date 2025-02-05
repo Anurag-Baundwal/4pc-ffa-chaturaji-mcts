@@ -15,12 +15,11 @@ class SelfPlay:
         self.buffer = deque(maxlen=buffer_size)
         self.temp_threshold = temp_threshold  # Moves before temperature becomes 0
 
-
-    def generate_game(self, temperature=1.0): # Instance method to call the static method
+    def generate_game(self, temperature=1.0): # Renamed instance method
         return SelfPlay._generate_game_static(self.network, self.simulations, self.temp_threshold, temperature)
 
     @staticmethod # Make it a static method
-    def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method - removed self
+    def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method (correct name)
         board = Board()
         game_data = []
         move_count = 0
@@ -30,12 +29,10 @@ class SelfPlay:
             if move_count % 5 == 0:
                 print(f"Move {move_count} - {len(game_data)} positions generated")
 
-
             root = MCTSNode(board)
 
             # Run MCTS simulations
             for sim_num in range(simulations_per_move):
-
                 node = root
                 search_path = [node]
 
@@ -43,7 +40,6 @@ class SelfPlay:
                 while not node.is_leaf():
                     node = node.select_child()
                     search_path.append(node)
-
 
                 # -- BATCHED EXPANSION AND EVALUATION --
                 if not node.board.is_game_over():

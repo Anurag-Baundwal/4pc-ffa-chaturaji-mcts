@@ -1,0 +1,685 @@
+Using device: cuda
+---------- ITERATION 1 ----------
+Generating games...
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Move 170 - 170 positions generated
+Move 175 - 175 positions generated
+Move 180 - 180 positions generated
+Move 185 - 185 positions generated
+Move 190 - 190 positions generated
+Move 195 - 195 positions generated
+Move 200 - 200 positions generated
+Move 205 - 205 positions generated
+Move 210 - 210 positions generated
+Move 215 - 215 positions generated
+Move 220 - 220 positions generated
+Move 225 - 225 positions generated
+Move 230 - 230 positions generated
+Move 235 - 235 positions generated
+Move 240 - 240 positions generated
+Move 245 - 245 positions generated
+Move 250 - 250 positions generated
+Move 255 - 255 positions generated
+Game finished. 256 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Game finished. 169 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Game finished. 85 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Move 170 - 170 positions generated
+Game finished. 174 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Game finished. 88 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Game finished. 128 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Move 170 - 170 positions generated
+Move 175 - 175 positions generated
+Game finished. 176 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Game finished. 60 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Game finished. 126 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Game finished. 99 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Game finished. 101 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Game finished. 140 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Move 170 - 170 positions generated
+Move 175 - 175 positions generated
+Game finished. 180 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Move 170 - 170 positions generated
+Move 175 - 175 positions generated
+Move 180 - 180 positions generated
+Move 185 - 185 positions generated
+Move 190 - 190 positions generated
+Game finished. 193 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Game finished. 147 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Game finished. 56 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Game finished. 40 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Game finished. 58 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Game finished. 59 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Game finished. 81 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Game finished. 121 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Game finished. 64 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Game finished. 105 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Move 85 - 85 positions generated
+Move 90 - 90 positions generated
+Move 95 - 95 positions generated
+Move 100 - 100 positions generated
+Move 105 - 105 positions generated
+Move 110 - 110 positions generated
+Move 115 - 115 positions generated
+Move 120 - 120 positions generated
+Move 125 - 125 positions generated
+Move 130 - 130 positions generated
+Move 135 - 135 positions generated
+Move 140 - 140 positions generated
+Move 145 - 145 positions generated
+Move 150 - 150 positions generated
+Move 155 - 155 positions generated
+Move 160 - 160 positions generated
+Move 165 - 165 positions generated
+Game finished. 167 positions generated in total.
+Move 0 - 0 positions generated
+Move 5 - 5 positions generated
+Move 10 - 10 positions generated
+Move 15 - 15 positions generated
+Move 20 - 20 positions generated
+Move 25 - 25 positions generated
+Move 30 - 30 positions generated
+Move 35 - 35 positions generated
+Move 40 - 40 positions generated
+Move 45 - 45 positions generated
+Move 50 - 50 positions generated
+Move 55 - 55 positions generated
+Move 60 - 60 positions generated
+Move 65 - 65 positions generated
+Move 70 - 70 positions generated
+Move 75 - 75 positions generated
+Move 80 - 80 positions generated
+Game finished. 82 positions generated in total.
+Generated 2955 data points from games.
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+/content/4pc-ffa-chaturaji-mcts/train.py in <module>
+    107 
+    108 if __name__ == "__main__":
+--> 109     train()
+
+5 frames
+/content/4pc-ffa-chaturaji-mcts/train.py in train()
+     68             total_loss = 0.0
+     69             num_batches = len(loader)
+---> 70             for batch_idx, (states, policies, values) in enumerate(loader):
+     71                 states = states.to(device)
+     72                 policies = policies.to(device)
+
+/usr/local/lib/python3.11/dist-packages/torch/utils/data/dataloader.py in __next__(self)
+    699                 # TODO(https://github.com/pytorch/pytorch/issues/76750)
+    700                 self._reset()  # type: ignore[call-arg]
+--> 701             data = self._next_data()
+    702             self._num_yielded += 1
+    703             if (
+
+/usr/local/lib/python3.11/dist-packages/torch/utils/data/dataloader.py in _next_data(self)
+    755     def _next_data(self):
+    756         index = self._next_index()  # may raise StopIteration
+--> 757         data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+    758         if self._pin_memory:
+    759             data = _utils.pin_memory.pin_memory(data, self._pin_memory_device)
+
+/usr/local/lib/python3.11/dist-packages/torch/utils/data/_utils/fetch.py in fetch(self, possibly_batched_index)
+     50                 data = self.dataset.__getitems__(possibly_batched_index)
+     51             else:
+---> 52                 data = [self.dataset[idx] for idx in possibly_batched_index]
+     53         else:
+     54             data = self.dataset[possibly_batched_index]
+
+/usr/local/lib/python3.11/dist-packages/torch/utils/data/_utils/fetch.py in <listcomp>(.0)
+     50                 data = self.dataset.__getitems__(possibly_batched_index)
+     51             else:
+---> 52                 data = [self.dataset[idx] for idx in possibly_batched_index]
+     53         else:
+     54             data = self.dataset[possibly_batched_index]
+
+/content/4pc-ffa-chaturaji-mcts/train.py in __getitem__(self, idx)
+     20         state_tensor = board_to_tensor(board, device)
+     21         policy_tensor = self._policy_to_tensor(policy, board)
+---> 22         return state_tensor, policy_tensor, torch.tensor(value, dtype=torch.float32)
+     23 
+     24     def _policy_to_tensor(self, policy, board):
+
+TypeError: must be real number, not Player
+
+
+THIS WAS BEFORE THE UPDATE OF 5th FEB 01:53 PM
+THIS IS PROBABLY STILL PRESENT AFTER updates2
