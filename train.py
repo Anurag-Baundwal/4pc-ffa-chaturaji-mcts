@@ -35,8 +35,8 @@ def generate_games_parallel(simulations_per_move, temp_threshold, num_processes,
     total_games = processes * games_per_process
     print(f"Generating {total_games} games across {processes} processes...")
     with multiprocessing.Pool(processes=processes) as pool:
-        game_args = [(simulations_per_move, temp_threshold) for _ in range(total_games)]
-        print(f"game_args: {game_args}")  # ADD THIS LINE
+        game_args = [(simulations_per_move, temp_threshold, 1.0) for _ in range(total_games)]
+        # print(f"game_args: {game_args}")  # ADD THIS LINE
         games_data_list = pool.starmap(_generate_game_static, game_args)
     return [item for sublist in games_data_list for item in sublist]
 
