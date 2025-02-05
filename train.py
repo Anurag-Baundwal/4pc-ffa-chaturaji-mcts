@@ -60,6 +60,8 @@ def train():
 
         print(f"Generated {len(dataset)} data points from games.")
         
+        scaler = torch.GradScaler(enabled=torch.cuda.is_available()) # Explicitly enable only when CUDA is available
+        
         # Training epoch
         network.train()
         for epoch in range(5):  # 5 epochs per iteration
@@ -72,17 +74,19 @@ def train():
                 
                 # Forward pass
                 optimizer.zero_grad()
-                policy_pred, value_pred = network(states)
+
+                with torch.autocast():
+                    policy_pred, value_pred = network(states)
+                    
+                    # Calculate losses
+                    policy_loss = torch.mean(-torch.sum(policies * torch.log_softmax(policy_pred, dim=1), dim=1))
+                    value_loss = torch.nn.functional.mse_loss(value_pred.squeeze(), values)
+                    loss = policy_loss + value_loss
                 
-                # Calculate losses
-                policy_loss = torch.mean(-torch.sum(policies * torch.log_softmax(policy_pred, dim=1), dim=1))
-                value_loss = torch.nn.functional.mse_loss(value_pred.squeeze(), values)
-                loss = policy_loss + value_loss
-                
-                # Backprop
-                loss.backward()
-                optimizer.step()
-                
+                scaler.scale(loss).backward()  # Scale the loss
+                scaler.step(optimizer)  # Unscale and update
+                scaler.update()
+
                 total_loss += loss.item()
 
                 # Print progress within epoch
