@@ -5,6 +5,7 @@ import numpy as np
 from collections import deque
 from mcts import MCTSNode
 from utils import board_to_tensor, move_to_index
+from model import ChaturajiNN # Import the model class
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -17,10 +18,11 @@ class SelfPlay:
         self.temp_threshold = temp_threshold  # Moves before temperature becomes 0
 
     def generate_game(self, temperature=1.0): # Renamed instance method
-        return SelfPlay._generate_game_static(self.network, self.simulations, self.temp_threshold, temperature)
+        return SelfPlay._generate_game_static(ChaturajiNN, self.simulations, self.temp_threshold, temperature) # Pass model class
 
     @staticmethod # Make it a static method
-    def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0): # Static method (correct name)
+    def _generate_game_static(model_class, simulations_per_move, temp_threshold, temperature=1.0): # Accept model class
+        network = model_class().to(device) # Instantiate network here, inside the process
         board = Board()
         game_data = []
         move_count = 1

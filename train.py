@@ -3,7 +3,7 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 from self_play import SelfPlay, _generate_game_static, _process_game_result_static
-from model import ChaturajiNN
+from model import ChaturajiNN # Import model class
 from utils import board_to_tensor, move_to_index
 import os, multiprocessing
 
@@ -50,12 +50,13 @@ def train():
     num_processes = multiprocessing.cpu_count() # Use all CPUs available
     print(f"Using {num_processes} processes for self-play.")
 
-    def generate_games_parallel(iteration_num, games_per_process=4): # Generate games in parallel
+    def generate_games_parallel(iteration_num, games_per_process=4): # Generate games in parallel, reduced games_per_process to 4, processes to 8 -> 32 games total
         processes = num_processes
-        total_games = processes * games_per_process # e.g. 4 processes * 5 games/process = 20 games
+        total_games = processes * games_per_process # e.g. 8 processes * 4 games/process = 32 games
         print(f"Generating {total_games} games across {processes} processes...")
         with multiprocessing.Pool(processes=processes) as pool:
-            game_args = [(network, self_play.simulations, self_play.temp_threshold) for _ in range(total_games)] # Arguments for each game generation
+            # Pass model class, simulations, temp_threshold
+            game_args = [(ChaturajiNN, self_play.simulations, self_play.temp_threshold) for _ in range(total_games)] # Arguments for each game generation
             games_data_list = pool.starmap(_generate_game_static, game_args) # Generate games in parallel
         return [item for sublist in games_data_list for item in sublist] # Flatten list of lists
 
