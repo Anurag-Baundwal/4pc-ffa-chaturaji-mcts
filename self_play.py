@@ -9,11 +9,9 @@ from model import ChaturajiNN # Import the model class
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Define _generate_game_static as a module-level function, not a staticmethod
-def _generate_game_static(simulations_per_move, temp_threshold, temperature=1.0): # Accept model class
-    from model import ChaturajiNN
-    # Force CPU usage for self-play generation
-    network = ChaturajiNN().to(torch.device("cpu"))
+def _generate_game_static(network, simulations_per_move, temp_threshold, temperature=1.0):
+    # Force CPU usage for self-play generation (network is already on CPU)
+    # network = ChaturajiNN().to(torch.device("cpu")) # Network is passed in already on CPU
     board = Board()
     game_data = []
     move_count = 1
@@ -39,8 +37,8 @@ def _generate_game_static(simulations_per_move, temp_threshold, temperature=1.0)
             if not node.board.is_game_over():
                 # 1. Prepare batch for all leaf nodes (just this node in our case)
                 leaf_nodes = [node]
-                device_static = next(network.parameters()).device  # Get the network's device directly
-                batch_states = [board_to_tensor(n.board, device=device) for n in leaf_nodes]
+                device_cpu = torch.device("cpu") # Define CPU device here
+                batch_states = [board_to_tensor(n.board, device=device_cpu) for n in leaf_nodes] # Pass CPU device
                 batch = torch.cat(batch_states)
 
                 # 2. Evaluate batch
