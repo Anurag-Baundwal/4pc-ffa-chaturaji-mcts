@@ -28,12 +28,12 @@ class SelfPlay:
             
             root = MCTSNode(board)
             
-            print(f"  Running MCTS for move {move_count + 1}...")  
+            # print(f"  Running MCTS for move {move_count + 1}...")  
 
             # Run MCTS simulations
             for sim_num in range(self.simulations):
-                if (sim_num + 1) % 25 == 0:  # Print every 25 simulations
-                    print(f"    Simulation {sim_num + 1}/{self.simulations}")
+                # if (sim_num + 1) % 25 == 0:  # Print every 25 simulations
+                #     print(f"    Simulation {sim_num + 1}/{self.simulations}")
 
                 node = root
                 search_path = [node]
