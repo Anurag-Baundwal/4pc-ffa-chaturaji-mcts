@@ -2,7 +2,7 @@
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
-from self_play import SelfPlay, _generate_game_static
+from self_play import SelfPlay, _generate_game_static, _process_game_result_static
 from model import ChaturajiNN
 from utils import board_to_tensor, move_to_index
 import os, multiprocessing
@@ -50,7 +50,7 @@ def train():
     num_processes = multiprocessing.cpu_count() # Use all CPUs available
     print(f"Using {num_processes} processes for self-play.")
 
-    def generate_games_parallel(iteration_num, games_per_process=5): # Generate games in parallel
+    def generate_games_parallel(iteration_num, games_per_process=4): # Generate games in parallel
         processes = num_processes
         total_games = processes * games_per_process # e.g. 4 processes * 5 games/process = 20 games
         print(f"Generating {total_games} games across {processes} processes...")
