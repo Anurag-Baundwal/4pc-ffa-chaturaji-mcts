@@ -1,4 +1,5 @@
-# train.py
+# train.py (Corrected)
+
 import multiprocessing  # Import multiprocessing at the VERY top
 multiprocessing.set_start_method('spawn', force=True) # Set start method to 'spawn' as the ABSOLUTE FIRST line, and use force=True
 
@@ -33,13 +34,13 @@ class ChessDataset(Dataset):
             policy_tensor[idx] = prob
         return policy_tensor
 
-def generate_games_parallel(simulations_per_move, temp_threshold, num_processes, games_per_process=4):
+def generate_games_parallel(network_class, state_dict, simulations_per_move, temp_threshold, num_processes, games_per_process=4):
     processes = num_processes
     total_games = processes * games_per_process
     print(f"Generating {total_games} games across {processes} processes...")
     with multiprocessing.Pool(processes=processes) as pool:
-        game_args = [(simulations_per_move, temp_threshold, 1.0) for _ in range(total_games)]
-        # print(f"game_args: {game_args}")  # ADD THIS LINE
+        # Pass the CLASS, STATE_DICT, and other parameters
+        game_args = [(network_class, state_dict, simulations_per_move, temp_threshold, 1.0) for _ in range(total_games)]
         games_data_list = pool.starmap(_generate_game_static, game_args)
     return [item for sublist in games_data_list for item in sublist]
 
@@ -49,15 +50,15 @@ def train():
     print(f"Using device: {device}")
 
     # Create model directory
-    model_dir = '/content/drive/MyDrive/models'
+    model_dir = '/content/drive/MyDrive/models' #  Change this to where you want to save the model weights. 
     os.makedirs(model_dir, exist_ok=True)
 
     network = ChaturajiNN().to(device)
     optimizer = optim.Adam(network.parameters(), lr=0.001, weight_decay=1e-4)
 
-    simulations_per_move_val = 25 # Store simulations in a simple variable
-    temp_threshold_val = 5 # Store temp_threshold in a simple variable
-    self_play = SelfPlay(network, simulations_per_move=simulations_per_move_val, temp_threshold=temp_threshold_val) # Still instantiate SelfPlay for serial game generation if needed, but not used in parallel part
+    simulations_per_move_val = 25
+    temp_threshold_val = 5
+    self_play = SelfPlay(network, simulations_per_move=simulations_per_move_val, temp_threshold=temp_threshold_val)
 
     # Load existing model if available
     if os.path.exists("model.pth"):
@@ -67,30 +68,22 @@ def train():
     print(f"Using {num_processes} processes for self-play.")
 
 
-    # Training loop
     for iteration in range(100):
         print(f"---------- ITERATION {iteration+1} ----------")
 
-        # Generate games
         print(f"Generating games in parallel...")
-        games = generate_games_parallel(simulations_per_move_val, temp_threshold_val, num_processes, games_per_process=4) # Pass simulations_per_move_val and temp_threshold_val directly
+        # Pass network CLASS and STATE_DICT
+        games = generate_games_parallel(ChaturajiNN, network.state_dict(), simulations_per_move_val, temp_threshold_val, num_processes, games_per_process=4)
 
-
-        # # Original serial game generation (comment out)
-        # print(f"Generating games...")
-        # games = [self_play.generate_game() for _ in range(25)]  # Parallel self-play # changed 20 to 50
-
-        # Create dataset
         dataset = ChessDataset([item for game in games for item in game])
-        loader = DataLoader(dataset, batch_size=256, shuffle=True) # batch size increased from 32 to 256 for colab gpus
+        loader = DataLoader(dataset, batch_size=256, shuffle=True)
 
         print(f"Generated {len(dataset)} data points from games.")
 
-        scaler = torch.GradScaler(enabled=torch.cuda.is_available()) # Explicitly enable only when CUDA is available
+        scaler = torch.GradScaler(enabled=torch.cuda.is_available())
 
-        # Training epoch
         network.train()
-        for epoch in range(5):  # 5 epochs per iteration
+        for epoch in range(5):
             total_loss = 0.0
             num_batches = len(loader)
             for batch_idx, (states, policies, values) in enumerate(loader):
@@ -98,37 +91,28 @@ def train():
                 policies = policies.to(device)
                 values = values.to(device)
 
-                # Forward pass
                 optimizer.zero_grad()
 
-                with torch.autocast():
+                with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=torch.cuda.is_available()):
                     policy_pred, value_pred = network(states)
-
-                    # Calculate losses
                     policy_loss = torch.mean(-torch.sum(policies * torch.log_softmax(policy_pred, dim=1), dim=1))
                     value_loss = torch.nn.functional.mse_loss(value_pred.squeeze(), values)
                     loss = policy_loss + value_loss
 
-                scaler.scale(loss).backward()  # Scale the loss
-                scaler.step(optimizer)  # Unscale and update
+                scaler.scale(loss).backward()
+                scaler.step(optimizer)
                 scaler.update()
 
                 total_loss += loss.item()
 
-                # Print progress within epoch
-                if (batch_idx + 1) % 10 == 0:  # Print every 10 batches
+                if (batch_idx + 1) % 10 == 0:
                     print(f"  Epoch {epoch+1}, Batch {batch_idx+1}/{num_batches}, Loss: {loss.item():.4f}")
 
             print(f"Epoch {epoch+1} Loss: {total_loss/len(loader):.4f}")
 
-        # Save model
-        # torch.save(network.state_dict(), f"model.pth")
-        # print(f"Model saved after iteration {iteration+1}")
-
-        # Save every 10 iterations
         if (iteration+1) % 10 == 0:
             save_path = f'{model_dir}/chaturaji_iter_{iteration+1}.pth'
-            torch.save(network.module.state_dict() if isinstance(network, torch.nn.DataParallel) else network.state_dict(), save_path) # handles dataparallel models
+            torch.save(network.module.state_dict() if isinstance(network, torch.nn.DataParallel) else network.state_dict(), save_path)
         print(f"Model saved after iteration {iteration+1}")
 
 if __name__ == "__main__":
