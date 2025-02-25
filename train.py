@@ -84,7 +84,7 @@ def train():
 
         # Training epoch
         network.train()
-        for epoch in range(5):  # 5 epochs per iteration
+        for epoch in range(50):  # 50 epochs per iteration (was 5)
             total_loss = 0.0
             num_batches = len(loader)
             for batch_idx, (states, policies, values) in enumerate(loader):
