@@ -42,20 +42,20 @@ def train():
 
     network = ChaturajiNN().to(device)
     optimizer = optim.Adam(network.parameters(), lr=0.001, weight_decay=1e-4)
-    self_play = SelfPlay(network, simulations_per_move=25)
+    self_play = SelfPlay(network, simulations_per_move=50)
     
     # Load existing model if available
     if os.path.exists("model.pth"):
         network.load_state_dict(torch.load("model.pth", map_location=device))
     
     # Training loop
-    for iteration in range(100): # reduced from 100 to 10 for testing
+    for iteration in range(50):
         print(f"---------- ITERATION {iteration+1} ----------")
 
         # Generate games and populate the buffer
         print(f"Generating games...")
         self_play.buffer.clear()  # Clear the buffer at the start of each iteration
-        for _ in range(5):  # Parallel self-play. Reduced for faster testing, as requested
+        for _ in range(25):  # Parallel self-play. # Increased to 25
             self_play.generate_game()  # Directly modifies self_play.buffer
 
         # Create dataset from the buffer
