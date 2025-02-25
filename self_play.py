@@ -1,8 +1,9 @@
-# self_play.py (CORRECTED)
-from board import Board
+# self_play.py (CORRECTED AND COMPLETE)
+import math
 import torch
 import numpy as np
 from collections import deque
+from board import Board
 from mcts import MCTSNode
 from utils import board_to_tensor, move_to_index
 import torch.nn.functional as F
@@ -27,8 +28,7 @@ class SelfPlay:
             # show training progress
             if move_count % 5 == 0:
                 print(f"Move {move_count} - {len(game_data)} positions generated")
-            
-            
+
             root = MCTSNode(board)
 
             # Run MCTS simulations
@@ -47,7 +47,7 @@ class SelfPlay:
                     leaf_nodes = [node]
                     device = next(self.network.parameters()).device  # Get the network's device directly
                     # UNSQUEEZE HERE, adding a batch dimension:
-                    batch_states = [board_to_tensor(n.board, device=device).unsqueeze(0) for n in leaf_nodes]                    
+                    batch_states = [board_to_tensor(n.board, device=device).unsqueeze(0) for n in leaf_nodes]
                     batch = torch.cat(batch_states)
 
 
@@ -74,7 +74,7 @@ class SelfPlay:
 
             # Get action probabilities and choose a move
             policy = self._get_action_probs(root, temperature=(1.0 if move_count < self.temp_threshold else 0.0))
-            
+
             # Store the board and policy *before* making the move
             game_data.append((board.copy(), policy, board.current_player))
 
@@ -84,7 +84,12 @@ class SelfPlay:
 
         # Process the game result *after* the game is finished
         self._process_game_result(game_data, board)
-        print(f"Game finished. {len(game_data)} positions generated in total.")  # Added  
+        print(f"Game finished. {len(game_data)} positions generated in total.")  # Added
+        # --- PRINT FINAL SCORES ---
+        print("Final Scores:")
+        for player, score in board.player_points.items():
+            print(f"  {player}: {score}")
+        # --- END PRINT FINAL SCORES ---
         return game_data # This isn't directly used by train() anymore, but it can be helpful for debugging/analysis.
 
 
@@ -111,7 +116,7 @@ class SelfPlay:
             probs = np.exp(log_counts)
             probs /= np.sum(probs)
         return {child.move: prob for child, prob in zip(root.children, probs)}
-    
+
     def _choose_move(self, root, temperature):
         move_probs = self._get_action_probs(root, temperature)
         moves = list(move_probs.keys())
@@ -119,18 +124,31 @@ class SelfPlay:
         return np.random.choice(moves, p=probs)
 
     def _process_game_result(self, game_data, final_board):
-        winner = final_board.get_winner()  # You'll need to implement get_winner() in Board
-        for i, (board, policy, player) in enumerate(game_data):
-            # Value target: +1 if player wins, -1 if loses, 0 for draws
-            value = 1.0 if player == winner else -1.0 if winner is not None else 0.0
-            self.buffer.append((board, policy, float(value))) # CRITICAL: Ensure value is a float
+        # --- CHANGED SECTION START ---
+        final_scores = final_board.player_points.items()
+        sorted_players = sorted(final_scores, key=lambda item: item[1], reverse=True)
+
+        rewards = {
+            sorted_players[0][0]: 2.0,
+            sorted_players[1][0]: 0.5,
+            sorted_players[2][0]: -0.5,
+            sorted_players[3][0]: -2.0,
+        }
+
+        for player, _ in sorted_players:
+            if player not in rewards:
+                rewards[player] = -2.0
+
+        for board, policy, player in game_data:
+            reward = rewards[player]
+            self.buffer.append((board, policy, float(reward)))
+        # --- CHANGED SECTION END ---
 
     def _evaluate_node(self, node): # NO LONGER CALLED - but kept for clarity
         if node.board.is_game_over():
             winner = node.board.get_winner()
             return 1.0 if winner == node.board.current_player else -1.0
         else:
-            # Create tensor directly on network's device, AND ADD BATCH DIMENSION HERE:
             state_tensor = board_to_tensor(node.board, device=self.device).unsqueeze(0)
             with torch.no_grad():
                 _, value = self.network(state_tensor)
