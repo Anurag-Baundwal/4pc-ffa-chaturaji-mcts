@@ -126,6 +126,7 @@ def get_uci_string(move, board):
 
     return f"{from_col}{from_row}{to_col}{to_row}"
 
+# board_to_tensor (CORRECTED)
 def board_to_tensor(board: Board, device) -> torch.Tensor:
     tensor = torch.zeros(40, 8, 8, device=device)  # Specify device during creation
     piece_types = list(PieceType)
@@ -148,7 +149,7 @@ def board_to_tensor(board: Board, device) -> torch.Tensor:
     for i, player in enumerate(Player):
         tensor[36 + i] = board.player_points[player] / 100.0
     
-    return tensor.unsqueeze(0)  # Add batch dim
+    return tensor  # Remove .unsqueeze(0)  <--- THIS IS THE KEY FIX
 
 def move_to_index(move):
     # Convert move to 8x8x8x8 tensor index (from_row, from_col, to_row, to_col)

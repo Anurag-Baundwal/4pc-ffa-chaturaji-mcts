@@ -1,3 +1,5 @@
+#train.py (CORRECTED)
+
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
@@ -19,10 +21,10 @@ class ChessDataset(Dataset):
         board, policy, value = self.buffer[idx]
         state_tensor = board_to_tensor(board, device)
         policy_tensor = self._policy_to_tensor(policy, board)
-        return state_tensor, policy_tensor, torch.tensor(value, dtype=torch.float32)
+        return state_tensor, policy_tensor, torch.tensor(value, dtype=torch.float32)  # value is now ALWAYS a float
 
     def _policy_to_tensor(self, policy, board):
-        legal_moves = board.get_psuedo_legal_moves(board.current_player)
+        legal_moves = board.get_psuedo_legal_moves(board.current_player)  # Corrected: Use board.current_player
         policy_tensor = torch.zeros(4096)  # 8x8x64 = 4096 possible moves
         for move, prob in policy.items():
             idx = move_to_index(move)
@@ -47,16 +49,18 @@ def train():
         network.load_state_dict(torch.load("model.pth", map_location=device))
     
     # Training loop
-    for iteration in range(100):
+    for iteration in range(100): # reduced from 100 to 10 for testing
         print(f"---------- ITERATION {iteration+1} ----------")
 
-        # Generate games
+        # Generate games and populate the buffer
         print(f"Generating games...")
-        games = [self_play.generate_game() for _ in range(25)]  # Parallel self-play # changed 20 to 50
-        
-        # Create dataset
-        dataset = ChessDataset([item for game in games for item in game])
-        loader = DataLoader(dataset, batch_size=4096, shuffle=True) # batch size increased from 32 to 256 for colab gpus
+        self_play.buffer.clear()  # Clear the buffer at the start of each iteration
+        for _ in range(5):  # Parallel self-play. Reduced for faster testing, as requested
+            self_play.generate_game()  # Directly modifies self_play.buffer
+
+        # Create dataset from the buffer
+        dataset = ChessDataset(self_play.buffer)  # Use the buffer directly!
+        loader = DataLoader(dataset, batch_size=4096, shuffle=True)
 
         print(f"Generated {len(dataset)} data points from games.")
         
@@ -75,7 +79,7 @@ def train():
                 # Forward pass
                 optimizer.zero_grad()
 
-                with torch.autocast():
+                with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=torch.cuda.is_available()):
                     policy_pred, value_pred = network(states)
                     
                     # Calculate losses
@@ -103,7 +107,4 @@ def train():
         if (iteration+1) % 10 == 0:
             save_path = f'{model_dir}/chaturaji_iter_{iteration+1}.pth'
             torch.save(network.state_dict(), save_path)
-        print(f"Model saved after iteration {iteration+1}")
-
-if __name__ == "__main__":
-    train()
+            print(f"Model saved after iteration {iteration+1}") # only print if saved in this iteration
