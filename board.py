@@ -20,8 +20,14 @@ class Board:
         self.active_players = set(Player)
         self.player_points = {player: 0 for player in Player}
         self.current_player = Player.RED
-        #self.resigned_players = []
         self.setup_initial_board()
+        # New properties
+        self.position_history = []
+        self.fifty_move_counter = 0
+        self.termination_reason = None
+        self.game_history = []  # store moves
+        self._previous_board_state = None  # store previous state
+        #-------
 
     def setup_initial_board(self):
         # Red pieces
@@ -61,25 +67,25 @@ class Board:
             return False
         return True
     
-    # def copy(self):
-    #     # Create a deep copy of this board
-    #     return copy.deepcopy(self)
-
-    # faster version (but still safe)
     def copy(self):
         new_board = Board()
         new_board.board = [
             [
-                Piece(piece.player, piece.piece_type) if piece else None  # Create NEW instances
+                Piece(piece.player, piece.piece_type) if piece else None
                 for piece in row
             ]
             for row in self.board
         ]
-        new_board.active_players = set(self.active_players)  # New set
-        new_board.player_points = dict(self.player_points)    # New dict
+        new_board.active_players = set(self.active_players)
+        new_board.player_points = dict(self.player_points)
         new_board.current_player = self.current_player
+        new_board.position_history = list(self.position_history)
+        new_board.fifty_move_counter = self.fifty_move_counter
+        new_board.termination_reason = self.termination_reason
+        new_board.game_history = list(self.game_history)
+        # No need to copy _previous_board_state, it's only for undoing the *last* move
         return new_board
-
+    
     def get_psuedo_legal_moves(self, player): # TODO: check if the player is dead?
         psuedo_legal_moves = []
 
@@ -213,7 +219,8 @@ class Board:
         return moves
 
     def make_move(self, move):
-        eliminated_players = []
+        # 1. STORE THE CURRENT BOARD STATE
+        self._previous_board_state = self.copy()
 
         piece = self.board[move.from_loc.row][move.from_loc.col]
         self.board[move.from_loc.row][move.from_loc.col] = None 
@@ -226,55 +233,51 @@ class Board:
             self.player_points[piece.player] += self.get_piece_capture_value(captured_piece)
 
             if captured_piece.piece_type == PieceType.KING:
-              # print(f"Inside make_move. {captured_player}'s king got captured. Captured by piece {piece.player} {piece.piece_type}. Board state: ")
-              # self.print_board()
               self.eliminate_player(captured_player)
-              eliminated_players.append(captured_player)
               
         self.board[move.to_loc.row][move.to_loc.col] = piece
         if move.promotion_piece_type:
             self.board[move.to_loc.row][move.to_loc.col].piece_type = move.promotion_piece_type
 
-        # if len(self.active_players) != 1: ################ FIX it in undo move too? 
-        #     self.current_player = Player((self.current_player.value + 1) % 4)
-        #     while (self.current_player not in self.active_players):
-        #         self.current_player = Player((self.current_player.value + 1) % 4)
-        #     return captured_piece, eliminated_players
-        # else: # BUG: In this case it returns none when it's supposed to return two things (captured piece, eliminated_players)
-        #     print("Only one active player left")
-        #     print(self.active_players)
+        # Update fifty_move_counter
+        is_pawn_move = (piece.piece_type == PieceType.PAWN)
+        is_capture = (captured_piece is not None)
+        if is_pawn_move or is_capture:
+            self.fifty_move_counter = 0
+        else:
+            self.fifty_move_counter += 1
+
+        # Update position history
+        position_key = self.get_position_key()
+        self.position_history.append(position_key)
+        self.game_history.append(move)
 
         self.current_player = Player((self.current_player.value + 1) % 4)
         while (self.current_player not in self.active_players):
             self.current_player = Player((self.current_player.value + 1) % 4)
-        return captured_piece, eliminated_players
 
-    def undo_move(self, move, captured_piece, eliminated_players):
-        piece = self.board[move.to_loc.row][move.to_loc.col]
-        self.board[move.from_loc.row][move.from_loc.col] = self.board[move.to_loc.row][move.to_loc.col]
-        self.board[move.to_loc.row][move.to_loc.col] = captured_piece
-        # if captured_piece and ((not captured_piece.is_dead) or captured_piece.player in eliminated_players): 
-        if captured_piece and (not captured_piece.is_dead):
-            self.player_points[piece.player] -= self.get_piece_capture_value(captured_piece)
+        return captured_piece, []  # No need to return eliminated players
 
-        # Adjusting turns needs to happen before adding back the eliminated players
-        self.current_player = Player((self.current_player.value - 1) % 4)
-        while (self.current_player not in self.active_players):
-            self.current_player = Player((self.current_player.value - 1) % 4)
+    def undo_move(self, move, captured_piece=None, eliminated_players=None): # Remove unused params
+        # 1. RESTORE THE PREVIOUS BOARD STATE
+        if self._previous_board_state is not None:
+            # Copy all relevant attributes from the saved state
+            self.board = self._previous_board_state.board
+            self.active_players = self._previous_board_state.active_players
+            self.player_points = self._previous_board_state.player_points
+            self.current_player = self._previous_board_state.current_player
+            self.position_history = self._previous_board_state.position_history
+            self.fifty_move_counter = self._previous_board_state.fifty_move_counter
+            self.termination_reason = self._previous_board_state.termination_reason
+            self.game_history = self._previous_board_state.game_history
 
-        # add revive player method? 
-        # also adjust turn after reviving - or pass turn from make_move to undo_move
-        for player in eliminated_players:
-            self.active_players.add(player)
+            self._previous_board_state = None # Clear after restoring.
 
-            for row in range(8):
-                for col in range(8):
-                    piece1 = self.board[row][col]
-                    if piece1 and piece1.player == player:
-                        piece1.is_dead = False
-                        # self.board[row][col].is_dead = False
-                        if piece1.piece_type == PieceType.DEAD_KING:
-                            piece1.piece_type = PieceType.KING # new addition - handle the king as well - make it undead
+    def get_position_key(self):
+        return tuple(tuple(
+            (piece.player.value if piece else None, piece.piece_type.value if piece else None)
+            for piece in row
+        ) for row in self.board)
 
     def get_piece_value(self, piece):
         match piece.piece_type:
@@ -455,12 +458,44 @@ class Board:
         return scores
 
     def is_game_over(self):
-        return len(self.active_players) == 1
+        if len(self.active_players) <= 1:
+            self.termination_reason = "elimination"
+            return True
+
+        if self.fifty_move_counter >= 50:
+            self.termination_reason = "fifty_move_rule"
+            return True
+
+        current_position_key = self.get_position_key()
+        if self.position_history.count(current_position_key) >= 3:
+            self.termination_reason = "threefold_repetition"
+            return True
+
+        return False
+    
+    def get_game_result(self):
+        if not self.is_game_over():
+            return None
+
+        results = {}
+        for player in Player:
+            results[player] = self.player_points[player]  # Start with base points
+
+        if self.termination_reason in ["fifty_move_rule", "threefold_repetition"]:
+            # Draw conditions: remaining players get +3
+            for player in self.active_players:
+                results[player] += 3
+        # else (game ended by elimination): no additional points needed, base points are final
+
+        return results
     
     def get_winner(self):
-        if len(self.active_players) == 1:
-            return next(iter(self.active_players))
-        return None
+        if not self.is_game_over():
+            return None
+
+        game_results = self.get_game_result()
+        sorted_results = sorted(game_results.items(), key=lambda item: item[1], reverse=True)
+        return sorted_results[0][0]
 
     def eliminate_player(self, player):
         # print(f"{player} eliminated!")

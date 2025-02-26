@@ -17,8 +17,20 @@ def get_best_move_mcts(board: Board, network, simulations=250): # Reduced from 8
             node = node.select_child()
         
         if node.board.is_game_over():
-            # value = 1.0 if node.board.get_winner() == root.board.current_player else -1.0 # bug
-            value = torch.tensor(1.0, device=device) if node.board.get_winner() == root.board.current_player else torch.tensor(-1.0, device=device)
+                # NEW: Handle all termination types with point-based rewards
+                scores = node.board.player_points
+                sorted_players = sorted(scores.items(), key=lambda x: -x[1])
+                
+                # Assign rewards: 2.0 for 1st, 0.5 for 2nd, etc.
+                reward_map = {sorted_players[0][0]: 2.0,
+                              sorted_players[1][0]: 0.5,
+                              sorted_players[2][0]: -0.5,
+                              sorted_players[3][0]: -2.0}
+                
+                value = torch.tensor(
+                    reward_map.get(root.board.current_player, -2.0),
+                    device=device
+                )
         else:
             with torch.no_grad():
                 # state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---

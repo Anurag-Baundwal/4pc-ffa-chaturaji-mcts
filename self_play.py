@@ -126,22 +126,25 @@ class SelfPlay:
     def _process_game_result(self, game_data, final_board):
         # --- CHANGED SECTION START ---
         final_scores = final_board.player_points.items()
-        sorted_players = sorted(final_scores, key=lambda item: item[1], reverse=True)
+        sorted_scores = sorted(final_scores, key=lambda item: item[1], reverse=True)
 
-        rewards = {
-            sorted_players[0][0]: 2.0,
-            sorted_players[1][0]: 0.5,
-            sorted_players[2][0]: -0.5,
-            sorted_players[3][0]: -2.0,
+        reward_map = {
+            sorted_scores[0][0]: 2.0,
+            sorted_scores[1][0]: 0.5,
+            sorted_scores[2][0]: -0.5,
+            sorted_scores[3][0]: -2.0,
         }
 
-        for player, _ in sorted_players:
-            if player not in rewards:
-                rewards[player] = -2.0
+        for player, _ in sorted_scores:
+            if player not in reward_map:
+                reward_map[player] = -2.0
 
         for board, policy, player in game_data:
-            reward = rewards[player]
-            self.buffer.append((board, policy, float(reward)))
+            self.buffer.append(
+                board,
+                policy,
+                float(reward_map.get(player, -2.0))
+            )
         # --- CHANGED SECTION END ---
 
     # def _evaluate_node(self, node): # NO LONGER CALLED - but kept for clarity
