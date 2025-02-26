@@ -144,12 +144,12 @@ class SelfPlay:
             self.buffer.append((board, policy, float(reward)))
         # --- CHANGED SECTION END ---
 
-    def _evaluate_node(self, node): # NO LONGER CALLED - but kept for clarity
-        if node.board.is_game_over():
-            winner = node.board.get_winner()
-            return 1.0 if winner == node.board.current_player else -1.0
-        else:
-            state_tensor = board_to_tensor(node.board, device=self.device).unsqueeze(0)
-            with torch.no_grad():
-                _, value = self.network(state_tensor)
-            return value.item()
+    # def _evaluate_node(self, node): # NO LONGER CALLED - but kept for clarity
+    #     if node.board.is_game_over():
+    #         winner = node.board.get_winner()
+    #         return 1.0 if winner == node.board.current_player else -1.0
+    #     else:
+    #         state_tensor = board_to_tensor(node.board, device=self.device).unsqueeze(0)
+    #         with torch.no_grad():
+    #             _, value = self.network(state_tensor)
+    #         return value.item()
