@@ -71,7 +71,7 @@ def train():
         # Generate games and populate the buffer
         print(f"Generating games...")
         self_play.buffer.clear()  # Clear the buffer at the start of each iteration
-        for _ in range(25):  # Parallel self-play. # Increased to 25
+        for _ in range(50):  # Parallel self-play. # Increased to 50
             self_play.generate_game()  # Directly modifies self_play.buffer
 
         # Create dataset from the buffer
@@ -84,7 +84,7 @@ def train():
 
         # Training epoch
         network.train()
-        for epoch in range(50):  # 50 epochs per iteration (was 5)
+        for epoch in range(25):  # 50 epochs per iteration (was 5)
             total_loss = 0.0
             num_batches = len(loader)
             for batch_idx, (states, policies, values) in enumerate(loader):
