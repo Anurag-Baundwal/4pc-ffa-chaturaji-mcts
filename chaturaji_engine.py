@@ -62,7 +62,17 @@ if __name__ == '__main__':
             print(f"Points: {board.player_points}")
             print(f"Total moves played in this game so far: {i}")
         else:
-            print("No valid moves found or game is over. ")
+            print(f"No valid moves found for {board.current_player}.")
+            if not board.is_game_over(): # Only resign if game is not already over
+                print(f"{board.current_player} resigns.")
+                board.resign() # Current player resigns
+            else:
+                print("Game is already over.")
 
-    if (len(board.active_players) == 1):
-        print(f"Game over! Final scores: {board.player_points}")
+        if board.is_game_over():
+            print(f"Game over! Termination reason: {board.termination_reason}") # Print termination reason
+            print(f"Final scores: {board.player_points}")
+            break # End game loop
+
+    if (len(board.active_players) == 1): # Redundant check, game_over already checked in loop
+        print(f"Winner: {board.get_winner()}") # Print winner based on points

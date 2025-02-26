@@ -1,47 +1,47 @@
+# search.py (MODIFIED - FIX FOR EMPTY root.children)
+
 from board import Board
 from mcts import MCTSNode
 import torch
-
-from utils import board_to_tensor
-
 import torch.nn.functional as F
+from utils import board_to_tensor, move_to_index
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_best_move_mcts(board: Board, network, simulations=250): # Reduced from 800 to 250 for faster nn training
-    device = next(network.parameters()).device  # Get device from network
+def get_best_move_mcts(board: Board, network, simulations=250):
+    device = next(network.parameters()).device
     root = MCTSNode(board)
     for _ in range(simulations):
         node = root
         while not node.is_leaf():
             node = node.select_child()
-        
+
         if node.board.is_game_over():
-                # NEW: Handle all termination types with point-based rewards
-                scores = node.board.player_points
-                sorted_players = sorted(scores.items(), key=lambda x: -x[1])
-                
-                # Assign rewards: 2.0 for 1st, 0.5 for 2nd, etc.
-                reward_map = {sorted_players[0][0]: 2.0,
-                              sorted_players[1][0]: 0.5,
-                              sorted_players[2][0]: -0.5,
-                              sorted_players[3][0]: -2.0}
-                
-                value = torch.tensor(
-                    reward_map.get(root.board.current_player, -2.0),
-                    device=device
-                )
+            # NEW: Get game results for terminal node
+            game_results = node.board.get_game_result()
+            sorted_results = sorted(game_results.items(), key=lambda x: -x[1])
+            reward_map = {
+                sorted_results[0][0]: 2.0,
+                sorted_results[1][0]: 0.5,
+                sorted_results[2][0]: -0.5,
+                sorted_results[3][0]: -2.0
+            }
+            value = torch.tensor(
+                reward_map.get(root.board.current_player, -2.0),
+                device=device
+            )
         else:
             with torch.no_grad():
-                # state_tensor = board_to_tensor(node.board).to(device) # --- ADDED .to(device) HERE ---
                 state_tensor = board_to_tensor(node.board, device=device)
                 policy_logits, value = network(state_tensor)
                 policy_probs = process_policy(policy_logits, node.board)
-            
             node.expand(policy_probs)
-        
         node.update(value.item())
-    
+
+    # FIX: Handle empty root.children (no legal moves)
+    if not root.children:
+        return None  # No legal moves available
+
     best_child = max(root.children, key=lambda c: c.visit_count)
     return best_child.move
 
