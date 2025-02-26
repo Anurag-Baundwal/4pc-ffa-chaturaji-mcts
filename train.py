@@ -89,6 +89,7 @@ def train():
             num_batches = len(loader)
             for batch_idx, (states, policies, values) in enumerate(loader):
                 states = states.to(device)
+                states = states.squeeze(1)
                 policies = policies.to(device)
                 values = values.to(device)
 
