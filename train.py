@@ -119,8 +119,8 @@ def train():
         # torch.save(network.state_dict(), f"model.pth")
         # print(f"Model saved after iteration {iteration+1}")
 
-        # Save every 10 iterations
-        if (iteration+1) % 10 == 0:
+        # Save every 1 iterations
+        if (iteration+1) % 1 == 0:
             save_path = os.path.join(model_dir, f'chaturaji_iter_{iteration+1}.pth') # Save in the timestamped directory
             torch.save(network.state_dict(), save_path)
             print(f"Model saved after iteration {iteration+1} to: {save_path}") # Print the full save path
