@@ -47,7 +47,7 @@ class SelfPlay:
                     leaf_nodes = [node]
                     device = next(self.network.parameters()).device  # Get the network's device directly
                     # UNSQUEEZE HERE, adding a batch dimension:
-                    batch_states = [board_to_tensor(n.board, device=device).unsqueeze(0) for n in leaf_nodes]
+                    batch_states = [board_to_tensor(n.board, device=device) for n in leaf_nodes] # Corrected
                     batch = torch.cat(batch_states)
 
 
@@ -140,11 +140,12 @@ class SelfPlay:
                 reward_map[player] = -2.0
 
         for board, policy, player in game_data:
-            self.buffer.append(
-                board,
-                policy,
-                float(reward_map.get(player, -2.0))
-            )
+            # Corrected (pack into a tuple)
+            self.buffer.append((
+                    board,
+                    policy,
+                    float(reward_map.get(player, -2.0))
+            ))
         # --- CHANGED SECTION END ---
 
     # def _evaluate_node(self, node): # NO LONGER CALLED - but kept for clarity
