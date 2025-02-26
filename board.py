@@ -114,54 +114,108 @@ class Board:
         moves = []
         player = self.board[row][col].player
 
+        promotion_row_red = 0
+        promotion_col_blue = 7
+        promotion_row_yellow = 7
+        promotion_col_green = 0
+
+        # Non-capture moves and promotion check
         match player:
             case Player.RED:
                 if row > 0 and self.board[row - 1][col] is None:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row - 1, col)))
+                    to_row, to_col = row - 1, col
+                    if to_row == promotion_row_red:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.BLUE:
                 if col < 7 and self.board[row][col + 1] is None:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row, col + 1)))
+                    to_row, to_col = row, col + 1
+                    if to_col == promotion_col_blue:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.YELLOW:
                 if row < 7 and self.board[row + 1][col] is None:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row + 1, col)))
+                    to_row, to_col = row + 1, col
+                    if to_row == promotion_row_yellow:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.GREEN:
                 if col > 0 and self.board[row][col - 1] is None:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row, col - 1)))
-                    
-        # Capture moves
+                    to_row, to_col = row, col - 1
+                    if to_col == promotion_col_green:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
+
+        # Capture moves and promotion check
         match player:
             case Player.RED:
                 if row > 0 and col > 0 and self.board[row - 1][col - 1] and self.board[row - 1][col - 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row - 1, col - 1)))
+                    to_row, to_col = row - 1, col - 1
+                    if to_row == promotion_row_red:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
                 if row > 0 and col < 7 and self.board[row - 1][col + 1] and self.board[row - 1][col + 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row - 1, col + 1)))
+                    to_row, to_col = row - 1, col + 1
+                    if to_row == promotion_row_red:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.BLUE:
                 if row > 0 and col < 7 and self.board[row - 1][col + 1] and self.board[row - 1][col + 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row - 1, col + 1)))
+                    to_row, to_col = row - 1, col + 1
+                    if to_col == promotion_col_blue:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
                 if row < 7 and col < 7 and self.board[row + 1][col + 1] and self.board[row + 1][col + 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row + 1, col + 1)))
+                    to_row, to_col = row + 1, col + 1
+                    if to_col == promotion_col_blue:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.YELLOW:
                 if row < 7 and col > 0 and self.board[row + 1][col - 1] and self.board[row + 1][col - 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row + 1, col - 1)))
+                    to_row, to_col = row + 1, col - 1
+                    if to_row == promotion_row_yellow:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
                 if row < 7 and col < 7 and self.board[row + 1][col + 1] and self.board[row + 1][col + 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row + 1, col + 1)))
+                    to_row, to_col = row + 1, col + 1
+                    if to_row == promotion_row_yellow:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
             case Player.GREEN:
                 if row > 0 and col > 0 and self.board[row - 1][col - 1] and self.board[row - 1][col - 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row - 1, col - 1)))
+                    to_row, to_col = row - 1, col - 1
+                    if to_col == promotion_col_green:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
                 if row < 7 and col > 0 and self.board[row + 1][col - 1] and self.board[row + 1][col - 1].player != player:
-                    moves.append(Move(BoardLocation(row, col), BoardLocation(row + 1, col - 1)))
-
-        # Promotion moves
-        promotion_row = (0 if player == Player.RED
-                 else 7 if player == Player.BLUE
-                 else 7 if player == Player.YELLOW
-                 else 0)
-        if (player == Player.RED and row == promotion_row) or (player == Player.BLUE and col == promotion_row) or (player == Player.YELLOW and row == promotion_row) or (player == Player.GREEN and col == promotion_row):
-            promotion_moves = []
-            for move in moves:
-                for piece_type in [PieceType.ROOK]:
-                    promotion_moves.append(Move(BoardLocation(move.from_loc.row, move.from_loc.col), BoardLocation(move.to_loc.row, move.to_loc.col), piece_type))
-            moves.extend(promotion_moves)
+                    to_row, to_col = row + 1, col - 1
+                    if to_col == promotion_col_green:
+                        for piece_type in [PieceType.ROOK]: # Promotion piece types
+                            moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col), piece_type))
+                    else:
+                        moves.append(Move(BoardLocation(row, col), BoardLocation(to_row, to_col)))
 
         return moves
 
